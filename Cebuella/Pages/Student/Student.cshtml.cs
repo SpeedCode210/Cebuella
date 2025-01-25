@@ -76,7 +76,7 @@ public class Student : PageModel
                 {
                     InformStudent(h, TaskContent, c);
                 }
-
+                TaskContent = "";
                 break;
             case 1:
                 context.Tasks.Remove(new() { Id = TaskId });
@@ -97,18 +97,25 @@ public class Student : PageModel
         await _client.StartAsync();
         _client.Ready += async () =>
         {
-            await _client.GetGuild(config.Guild).GetTextChannel(ulong.Parse(channel)).SendMessageAsync(
-                embed:new EmbedBuilder()
+            var embed = new EmbedBuilder()
+            {
+                Color = Color.Teal,
+                Title = "New Task from Coach " + coach,
+                Description = content,
+                Footer = new EmbedFooterBuilder()
                 {
-                    Color = Color.Teal,
-                    Title = "New Task from Coach " + coach,
-                    Description = content,
-                    Footer = new EmbedFooterBuilder()
-                    {
-                        Text = $"Cebuella - Student Progress Tracker",
-                        IconUrl = "https://algerianmo.com/static/images/logo.png"
-                    }
-                }.Build());
+                    Text = $"Cebuella - Student Progress Tracker",
+                    IconUrl = "https://algerianmo.com/static/images/logo.png"
+                }
+            }.Build();
+            if (channel.Contains("x"))
+            {
+                var a = channel.Split('x');
+                config.Guild = ulong.Parse(a[0]);
+                channel = a[1];
+            }
+            
+            await _client.GetGuild(config.Guild).GetTextChannel(ulong.Parse(channel)).SendMessageAsync(embed:embed);
 
             await _client.LogoutAsync();
             _client.Dispose();
