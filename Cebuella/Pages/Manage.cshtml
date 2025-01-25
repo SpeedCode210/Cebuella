@@ -11,7 +11,7 @@
     <!-- Add User Form -->
     <form method="POST" class="mb-4">
         <div class="input-group">
-            <input asp-for="Username" class="form-control" placeholder="Enter username"/>
+            <input asp-for="Username" required class="form-control" placeholder="Enter username"/>
             <input asp-for="Action" value="0" type="hidden"/>
             <button type="submit" class="btn btn-primary">Add</button>
         </div>
