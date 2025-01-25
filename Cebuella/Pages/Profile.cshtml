@@ -1,0 +1,58 @@
+@page
+@model Cebuella.Pages.Profile
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST" class="card p-4 shadow">
+                <h1 class="card-title text-center mb-4">Update Profile</h1>
+
+                <!-- Error Message -->
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @Model.ErrorMessage
+                    </div>
+                }
+
+                <!-- First Name -->
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label">First Name</label>
+                    <input required asp-for="FirstName" class="form-control" />
+                </div>
+
+                <!-- Last Name -->
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label">Last Name</label>
+                    <input required asp-for="LastName" class="form-control" />
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label asp-for="Email" type="email" class="form-label">Email</label>
+                    <input required asp-for="Email" class="form-control" />
+                </div>
+
+                <!-- New Password -->
+                <div class="mb-3">
+                    <label asp-for="NewPassword" class="form-label">New Password</label>
+                    <input asp-for="NewPassword" type="password" class="form-control" />
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-3">
+                    <label asp-for="NewPasswordConfirmation" class="form-label">Confirm Password</label>
+                    <input asp-for="NewPasswordConfirmation" type="password" class="form-control" />
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Update Information</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
