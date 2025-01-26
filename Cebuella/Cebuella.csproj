@@ -16,4 +16,10 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="wwwroot\cebuella.png">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

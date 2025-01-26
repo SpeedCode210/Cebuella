@@ -104,8 +104,7 @@ public class Student : PageModel
                 Description = content,
                 Footer = new EmbedFooterBuilder()
                 {
-                    Text = $"Cebuella - Student Progress Tracker",
-                    IconUrl = "https://algerianmo.com/static/images/logo.png"
+                    Text = $"Cebuella - Student Progress Tracker"
                 }
             }.Build();
             if (channel.Contains("x"))
