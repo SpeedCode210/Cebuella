@@ -14,6 +14,8 @@ public class IndexModel : PageModel
     [BindProperty] public bool NewReport { get; set; }
 
     [BindProperty] public int Action { get; set; }
+    
+    public string Username { get; set; }
 
     public List<StudentTask> Tasks { get; set; } = new();
     
@@ -38,6 +40,7 @@ public class IndexModel : PageModel
         var user = HttpContext.User;
         var role = user.FindFirst(ClaimTypes.Role)?.Value;
         var username = user.FindFirst(ClaimTypes.Name)?.Value;
+        Username = username!;
         
         if(role != "Student") return Redirect("/Manage");
 

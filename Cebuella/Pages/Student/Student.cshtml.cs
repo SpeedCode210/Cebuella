@@ -36,6 +36,8 @@ public class Student : PageModel
         var username = user.FindFirst(ClaimTypes.Role)?.Value;
 
         if (username == "Student") return Redirect("/");
+        
+        if(!context.Users.Any(x => x.Username == StudentUsername)) return NotFound();
 
         var report = context.Reports.FirstOrDefault(t => t.Username == StudentUsername && t.Date == DateTime.Now.Date);
         if (report == null)
@@ -105,7 +107,8 @@ public class Student : PageModel
                 Footer = new EmbedFooterBuilder()
                 {
                     Text = $"Cebuella - Student Progress Tracker"
-                }
+                },
+                ThumbnailUrl = "https://raw.githubusercontent.com/SpeedCode210/Cebuella/refs/heads/master/Cebuella/wwwroot/cebuella.png"
             }.Build();
             if (channel.Contains("x"))
             {
