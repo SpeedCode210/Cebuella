@@ -36,8 +36,8 @@ public class Student : PageModel
         var username = user.FindFirst(ClaimTypes.Role)?.Value;
 
         if (username == "Student") return Redirect("/");
-        
-        if(!context.Users.Any(x => x.Username == StudentUsername)) return NotFound();
+
+        if (!context.Users.Any(x => x.Username == StudentUsername)) return NotFound();
 
         var report = context.Reports.FirstOrDefault(t => t.Username == StudentUsername && t.Date == DateTime.Now.Date);
         if (report == null)
@@ -78,6 +78,7 @@ public class Student : PageModel
                 {
                     InformStudent(h, TaskContent, c);
                 }
+
                 TaskContent = "";
                 break;
             case 1:
@@ -108,7 +109,8 @@ public class Student : PageModel
                 {
                     Text = $"Cebuella - Student Progress Tracker"
                 },
-                ThumbnailUrl = "https://raw.githubusercontent.com/SpeedCode210/Cebuella/refs/heads/master/Cebuella/wwwroot/cebuella.png"
+                ThumbnailUrl =
+                    "https://raw.githubusercontent.com/SpeedCode210/Cebuella/refs/heads/master/Cebuella/wwwroot/cebuella.png"
             }.Build();
             if (channel.Contains("x"))
             {
@@ -116,8 +118,8 @@ public class Student : PageModel
                 config.Guild = ulong.Parse(a[0]);
                 channel = a[1];
             }
-            
-            await _client.GetGuild(config.Guild).GetTextChannel(ulong.Parse(channel)).SendMessageAsync(embed:embed);
+
+            await _client.GetGuild(config.Guild).GetTextChannel(ulong.Parse(channel)).SendMessageAsync(embed: embed);
 
             await _client.LogoutAsync();
             _client.Dispose();
@@ -125,10 +127,8 @@ public class Student : PageModel
     }
 
     class DiscordInfo
-        {
-
-    public string Token { get; set; }
-    public ulong Guild { get; set; }
-}
-
+    {
+        public string Token { get; set; }
+        public ulong Guild { get; set; }
+    }
 }
