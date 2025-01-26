@@ -66,7 +66,7 @@ public class LoginModel : PageModel
         
         var identity = new ClaimsIdentity(claims, "Cookie");
         var principal = new ClaimsPrincipal(identity);
-        await HttpContext.SignInAsync(principal);
+        await HttpContext.SignInAsync(principal, new AuthenticationProperties { IsPersistent = true });
 
 
         return RedirectToPage("/Index");
