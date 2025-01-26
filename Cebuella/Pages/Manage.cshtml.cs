@@ -12,6 +12,8 @@ namespace Cebuella.Pages;
 public class Manage : PageModel
 {
     public List<User> Users { get; set; }
+    public List<int> UnsolvedTasks { get; set; } 
+    public List<bool> SubmittedReport { get; set; } 
     
     [BindProperty]
     public int Action { get; set; }
@@ -37,6 +39,20 @@ public class Manage : PageModel
         if(username == "Student") return Redirect("/");
 
         Users = context.Users.ToList();
+        Users.Sort((a, b) =>
+        {
+            return a.Type - b.Type;
+        });
+        int[] unsolvedtasks = new int[Users.Count];
+        bool[] submittedReport = new bool[Users.Count];
+        for (int i = 0; i < Users.Count; i++)
+        {
+            unsolvedtasks[i] =
+                context.Tasks.Count(t => t.StudentId == Users[i].Username && t.Status != Status.Completed);
+            submittedReport[i] = context.Reports.Any(t=> t.Username == Users[i].Username && t.Date == DateTime.Now.Date);
+        }
+        UnsolvedTasks = unsolvedtasks.ToList();
+        SubmittedReport = submittedReport.ToList();
         return Page();
     }
 

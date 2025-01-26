@@ -30,15 +30,17 @@
         <tr>
             <th>Username</th>
             <th>Full Name</th>
+            <th>Unsolved Tasks</th>
             <th>Channel ID</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        @foreach (User u in Model.Users)
+        @for(int i = 0; i < Model.Users.Count; i++)
         {
+            var u = Model.Users[i];
             <tr>
-                <td>@u.Username</td>
+                <td class="@(Model.SubmittedReport[i] ? "text-success" : "text-danger")">@u.Username</td>
                 @if (u.Type == UserType.Student)
                 {
                     <td><a href="/Student/@u.Username">@u.FirstName @u.LastName</a></td>
@@ -47,6 +49,7 @@
                 {
                     <td>@u.FirstName @u.LastName</td>
                 }
+                <td>@Model.UnsolvedTasks[i]</td>
                 <td>
                     @if (u.Type == UserType.Student)
                     {

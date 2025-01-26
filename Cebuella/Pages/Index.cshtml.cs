@@ -57,7 +57,21 @@ public class IndexModel : PageModel
         }
         
         Tasks = context.Tasks.Where(t=>t.StudentId == username).ToList();
+        Tasks.Sort((a, b) =>
+        {
+            if (a.Content.ToLower().Contains("important"))
+            {
+                return -1;
+            }
+            
+            if (b.Content.ToLower().Contains("important"))
+            {
+                return 1;
+            }
 
+            return 0;
+        });
+        
         return Page();
     }
 
