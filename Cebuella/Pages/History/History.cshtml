@@ -15,14 +15,12 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="mt-4">
-                <div class="form-group">
-                    <label for="dailyReport">Daily Report</label>
-                    <div id="editorContainer"
-                         style="height: 90vh; border: 2px solid #007bff; border-radius: 5px;"></div>
-                    <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
-                </div>
+        <div class="mt-4">
+            <div class="form-group">
+                <label for="dailyReport">Daily Report</label>
+                <div id="editorContainer"
+                     style="height: 90vh; border: 2px solid #007bff; border-radius: 5px;"></div>
+                <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
             </div>
         </div>
     </div>
@@ -41,7 +39,8 @@
                 theme: 'vs-dark', // Change theme to dark mode
                 lineNumbers: 'on', // Enable line numbers
                 readOnly: true, // Make read-only
-                minimap: {enabled: true} // Enable minimap
+                minimap: {enabled: true}, // Enable minimap
+                automaticLayout: true // Auto resize
             });
 
             // Update the hidden textarea with the editor content before form submission

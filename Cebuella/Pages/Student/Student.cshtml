@@ -16,14 +16,12 @@
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="mt-4">
-                <div class="form-group">
-                    <label for="dailyReport">Daily Report</label>
-                    <div id="editorContainer"
-                         style="height: 300px; border: 2px solid #007bff; border-radius: 5px;"></div>
-                    <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
-                </div>
+        <div class="mt-4">
+            <div class="form-group">
+                <label for="dailyReport">Daily Report</label>
+                <div id="editorContainer"
+                     style="height: 450px; border: 2px solid #007bff; border-radius: 5px;"></div>
+                <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
             </div>
         </div>
     </div>
@@ -38,7 +36,7 @@
 
     <form method="post" class="mb-4">
         <div class="input-group">
-            <input type="text"  class="form-control" placeholder="Enter a new task" asp-for="TaskContent" required />
+            <input type="text" class="form-control" placeholder="Enter a new task" asp-for="TaskContent" required/>
             <input type="hidden" value="0" asp-for="Action"/>
             <button type="submit" class="btn btn-primary">Add Task</button>
         </div>
@@ -48,33 +46,34 @@
     <div class="list-group mt-4">
         @foreach (StudentTask t in Model.Tasks)
         {
-            <div class="list-group-item mb-3 shadow-sm @(t.Content.ToLower().Contains("important") ? "bg-warning" : "")">
+            <div
+                class="list-group-item mb-3 shadow-sm @(t.Content.ToLower().Contains("important") ? "bg-warning" : "")">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <span class="h5">📝 @t.Content</span>
-                        <br />
-                        <small class="text-muted">👨‍🏫 Given by @t.CoachId</small>
-                    </div>
-                    <div class="d-flex align-items-center">
+                        <small class="h5">👨‍🏫&nbsp;Given by @t.CoachId</small>
                         @switch (t.Status)
                         {
                             case Status.NotAttempted:
-                                <span class="badge bg-secondary me-2">🟡 Not Attempted</span>
+                                <span class="badge bg-secondary me-2">🟡&nbsp;Not Attempted</span>
                                 break;
                             case Status.Attempting:
-                                <span class="badge bg-primary me-2">🔵 Attempting</span>
+                                <span class="badge bg-primary me-2">🔵&nbsp;Attempting</span>
                                 break;
                             case Status.Stuck:
-                                <span class="badge bg-warning me-2">🟠 Stuck</span>
+                                <span class="badge bg-warning me-2">🟠&nbsp;Stuck</span>
                                 break;
                             case Status.Completed:
-                                <span class="badge bg-success me-2">✅ Completed</span>
+                                <span class="badge bg-success me-2">✅&nbsp;Completed</span>
                                 break;
                         }
+                        <br/>
+                        <p class="text-md text-break">📝&nbsp;@t.Content</p>
+                    </div>
+                    <div class="d-flex align-items-center">
                         <form method="post">
                             <input type="hidden" value="1" asp-for="Action"/>
                             <input type="hidden" value="@t.Id" asp-for="TaskId"/>
-                            <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
                     </div>
                 </div>
@@ -95,7 +94,8 @@
                 theme: 'vs-dark', // Change theme to dark mode
                 lineNumbers: 'on', // Enable line numbers
                 readOnly: true, // Make read-only
-                minimap: {enabled: true} // Enable minimap
+                minimap: {enabled: true}, // Enable minimap
+                automaticLayout: true // Auto resize
             });
 
             // Update the hidden textarea with the editor content before form submission

@@ -14,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Cebuella</title>
     <link rel="icon" type="image/png" href="/cebuella.png">
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://bootswatch.com/5/lumen/bootstrap.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Cebuella.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/editor/editor.main.min.css" />
@@ -79,6 +79,34 @@
             else navbarCollapse.classList.remove('show');
             x = !x;
         });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Function to detect URLs in text and make them clickable
+        function makeUrlsClickable(element) {
+            const urlRegex = /(https?:\/\/\S+|www\.\S+)/g; // Match URLs starting with http(s):// or www.
+
+            element.querySelectorAll("*").forEach((node) => {
+                if (
+                    node.childNodes.length === 1 &&
+                    node.childNodes[0].nodeType === Node.TEXT_NODE &&
+                    node.tagName !== "A" // Ignore <a> tags
+                ) {
+                    const text = node.innerHTML;
+
+                    // If the text contains URLs
+                    if (urlRegex.test(text)) {
+                        node.innerHTML = text.replace(urlRegex, (url) => {
+                            const href = url.startsWith("http") ? url : `https://${url}`; // Add https:// if not present
+                            return `<a href="${href}" target="_blank">${url}</a>`;
+                        });
+                    }
+                }
+            });
+        }
+
+        // Run the function on the entire body of the document
+        makeUrlsClickable(document.body);
     });
 </script>
 </body>

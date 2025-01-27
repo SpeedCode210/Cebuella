@@ -15,29 +15,27 @@
         {
             <p>You didn't submit your daily report yet.</p>
         }
-        <a class="btn btn-info" href="@("/History/"+Model.Username)">View History</a>
+        <a class="btn btn-info" href="@("/History/" + Model.Username)">View History</a>
     </div>
 
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form method="POST" class="mt-4">
-                <div class="form-group">
-                    <div id="editorContainer"
-                         style="height: 300px; border: 2px solid #007bff; border-radius: 5px;"></div>
-                    <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
-                </div>
-                @if (Model.NewReport)
-                {
-                    <input type="hidden" asp-for="Action" value="0"/>
-                }
-                else
-                {
-                    <input type="hidden" asp-for="Action" value="1"/>
-                }
-                <button type="submit" class="btn btn-primary mt-3">Save</button>
-            </form>
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <div id="editorContainer"
+                     style="height: 450px; border: 2px solid #007bff; border-radius: 5px;"></div>
+                <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
+            </div>
+            @if (Model.NewReport)
+            {
+                <input type="hidden" asp-for="Action" value="0"/>
+            }
+            else
+            {
+                <input type="hidden" asp-for="Action" value="1"/>
+            }
+            <button type="submit" class="btn btn-primary mt-3">Save</button>
+        </form>
 
-        </div>
     </div>
 </div>
 
@@ -50,22 +48,30 @@
     <div class="list-group mt-4">
         @foreach (StudentTask t in Model.Tasks)
         {
-            <div class="list-group-item mb-3 shadow-sm @(t.Content.ToLower().Contains("important") ? "bg-warning" : "")">
+            <div
+                class="list-group-item mb-3 shadow-sm @(t.Content.ToLower().Contains("important") ? "bg-warning" : "")">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <span class="h5">📝 @t.Content</span>
+                        <small class="h5">👨‍🏫&nbsp;Given by @t.CoachId</small>
                         <br/>
-                        <small class="text-muted">👨‍🏫 Given by @t.CoachId</small>
+                        <span class="text-md text-break">📝 @t.Content</span>
                     </div>
                     <div class="d-flex align-items-center">
-                        <form method="post" class="me-2">
+                        <form method="post" class="me-2" style="width: max-content">
                             <input type="hidden" asp-for="Action" value="2"/>
                             <input type="hidden" asp-for="TaskId" value="@t.Id"/>
-                            <select asp-for="TaskStatus" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="@Status.NotAttempted" selected="@(t.Status == Status.NotAttempted)">🟡 Not Attempted</option>
-                                <option value="@Status.Attempting" selected="@(t.Status == Status.Attempting)">🔵 Attempting</option>
+                            <select asp-for="TaskStatus" class="form-select form-select-sm"
+                                    onchange="this.form.submit()">
+                                <option value="@Status.NotAttempted" selected="@(t.Status == Status.NotAttempted)">🟡 Not
+                                    Attempted
+                                </option>
+                                <option value="@Status.Attempting" selected="@(t.Status == Status.Attempting)">🔵
+                                    Attempting
+                                </option>
                                 <option value="@Status.Stuck" selected="@(t.Status == Status.Stuck)">🟠 Stuck</option>
-                                <option value="@Status.Completed" selected="@(t.Status == Status.Completed)">✅ Completed</option>
+                                <option value="@Status.Completed" selected="@(t.Status == Status.Completed)">✅
+                                    Completed
+                                </option>
                             </select>
                         </form>
                     </div>
@@ -77,12 +83,12 @@
 
 @section Scripts {
     <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
+        document.addEventListener("DOMContentLoaded", function (event) {
             var scrollpos = localStorage.getItem('scrollpos');
             if (scrollpos) window.scrollTo(0, scrollpos);
         });
 
-        window.onbeforeunload = function(e) {
+        window.onbeforeunload = function (e) {
             localStorage.setItem('scrollpos', window.scrollY);
         };
     </script>
@@ -97,7 +103,8 @@
                 language: 'markdown', // Change language to Markdown
                 theme: 'vs-dark', // Change theme to dark mode
                 lineNumbers: 'on', // Enable line numbers
-                minimap: {enabled: true} // Enable minimap
+                minimap: {enabled: true}, // Enable minimap
+                automaticLayout: true // Auto resize
             });
 
             // Update the hidden textarea with the editor content before form submission
