@@ -11,75 +11,80 @@
     <!-- Add User Form -->
     <form method="POST" class="mb-4">
         <div class="input-group">
+            <button type="reset" onclick="document.getElementById('reminder').submit()" class="btn btn-success">Remind
+                Daily Reports
+            </button>
             <input asp-for="Username" required class="form-control" placeholder="Enter username"/>
             <input asp-for="Action" value="0" type="hidden"/>
-            <button type="submit" class="btn btn-primary">Add</button>
+            <button type="submit" asp-for="Action" value="0" class="btn btn-primary">Add</button>
         </div>
-        <small class="form-text text-muted">
+        <div class="form-text text-muted" style="text-align: end">
             The default password will be: <strong>username_2025</strong>
-        </small>
+        </div>
     </form>
-    <form method="POST">
+
+    <form method="POST" id="reminder">
         <input asp-for="Action" value="4" type="hidden"/>
-        <button type="submit" class="btn btn-success">Remind Daily Reports</button>
     </form>
 
     <!-- Users Table -->
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th>Username</th>
-            <th>Full Name</th>
-            <th>Unsolved Tasks</th>
-            <th>Channel ID</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @for(int i = 0; i < Model.Users.Count; i++)
-        {
-            var u = Model.Users[i];
+    <div class="table-responsive">
+        <table class="table" style="min-width: max-content;">
+            <thead class="thead-dark">
             <tr>
-                <td class="@(Model.SubmittedReport[i] ? "text-success" : "text-danger")">@u.Username</td>
-                @if (u.Type == UserType.Student)
-                {
-                    <td><a href="/Student/@u.Username">@u.FirstName @u.LastName</a></td>
-                }
-                else
-                {
-                    <td>@u.FirstName @u.LastName</td>
-                }
-                <td>@Model.UnsolvedTasks[i]</td>
-                <td>
-                    @if (u.Type == UserType.Student)
-                    {
-                        <form method="POST">
-                            <div class="input-group">
-                                <input asp-for="Username" value="@u.Username" type="hidden"/>
-                                <input asp-for="DiscordId" required value="@u.DiscordChannel" class="form-control"/>
-                                <input asp-for="Action" value="3" type="hidden"/>
-                                <button type="submit" class="btn btn-info btn-sm">Change</button>
-                            </div>
-                        </form>
-                    }
-                </td>
-                <td>
-                    @if (u.Type == UserType.Student)
-                    {
-                        <form method="POST" class="d-inline">
-                            <input asp-for="Username" value="@u.Username" type="hidden"/>
-                            <input asp-for="Action" value="2" type="hidden"/>
-                            <button type="submit" class="btn btn-warning btn-sm">Make Coach</button>
-                        </form>
-                        <form method="POST" class="d-inline">
-                            <input asp-for="Username" value="@u.Username" type="hidden"/>
-                            <input asp-for="Action" value="1" type="hidden"/>
-                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    }
-                </td>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Unsolved Tasks</th>
+                <th>Channel ID</th>
+                <th>Actions</th>
             </tr>
-        }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            @for (int i = 0; i < Model.Users.Count; i++)
+            {
+                var u = Model.Users[i];
+                <tr>
+                    <td class="@(Model.SubmittedReport[i] ? "text-success" : "text-danger")">@u.Username</td>
+                    @if (u.Type == UserType.Student)
+                    {
+                        <td><a href="/Student/@u.Username">@u.FirstName @u.LastName</a></td>
+                    }
+                    else
+                    {
+                        <td>@u.FirstName @u.LastName</td>
+                    }
+                    <td>@Model.UnsolvedTasks[i]</td>
+                    <td>
+                        @if (u.Type == UserType.Student)
+                        {
+                            <form method="POST">
+                                <div class="input-group">
+                                    <input asp-for="Username" value="@u.Username" type="hidden"/>
+                                    <input asp-for="DiscordId" required value="@u.DiscordChannel" class="form-control"/>
+                                    <input asp-for="Action" value="3" type="hidden"/>
+                                    <button type="submit" class="btn btn-info btn-sm">Change</button>
+                                </div>
+                            </form>
+                        }
+                    </td>
+                    <td>
+                        @if (u.Type == UserType.Student)
+                        {
+                            <form method="POST" class="d-inline">
+                                <input asp-for="Username" value="@u.Username" type="hidden"/>
+                                <input asp-for="Action" value="2" type="hidden"/>
+                                <button type="submit" class="btn btn-warning btn-sm">Make Coach</button>
+                            </form>
+                            <form method="POST" class="d-inline">
+                                <input asp-for="Username" value="@u.Username" type="hidden"/>
+                                <input asp-for="Action" value="1" type="hidden"/>
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 </div>
