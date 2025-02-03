@@ -26,4 +26,10 @@
       <AdditionalFiles Include="Pages\History\History.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="add_points.py">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

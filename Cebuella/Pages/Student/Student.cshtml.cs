@@ -140,10 +140,4 @@ public class Student : PageModel
             _client.Dispose();
         };
     }
-
-    class DiscordInfo
-    {
-        public string Token { get; set; }
-        public ulong Guild { get; set; }
-    }
 }

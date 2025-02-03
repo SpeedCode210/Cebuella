@@ -27,11 +27,14 @@ public class IndexModel : PageModel
 
 
     private readonly AppDbContext context;
+    
+    private readonly IConfiguration configuration;
 
-    public IndexModel(ILogger<IndexModel> logger, AppDbContext context)
+    public IndexModel(ILogger<IndexModel> logger, AppDbContext context, IConfiguration configuration)
     {
         _logger = logger;
         this.context = context;
+        this.configuration = configuration;
     }
 
     public IActionResult OnGet()
@@ -77,20 +80,25 @@ public class IndexModel : PageModel
 
     public IActionResult OnPost()
     {
+        var username = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value!;
         switch (Action)
         {
             case 0:
                 context.Reports.Add(new()
                 {
                     Date = DateTime.Now.Date,
-                    Username = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value,
+                    Username = username,
                     Content = DailyReport
                 });
                 context.SaveChanges();
+
+                if (!string.IsNullOrEmpty(configuration["PostReportCommand"]))
+                {
+                    ShellHelper.Bash(configuration["PostReportCommand"]!.Replace("{STUDENT_USERNAME}", username));
+                }
                 break;
             case 1:
                 var user = HttpContext.User;
-                var username = user.FindFirst(ClaimTypes.Name)?.Value;
                 var report =
                     context.Reports.FirstOrDefault(t => t.Username == username && t.Date == DateTime.Now.Date);
                 report!.Content = DailyReport;
@@ -99,7 +107,7 @@ public class IndexModel : PageModel
                 break;
             case 2:
                 var task = context.Tasks.FirstOrDefault(t => t.Id == TaskId);
-                task.Status = TaskStatus;
+                task!.Status = TaskStatus;
                 context.Tasks.Update(task);
                 context.SaveChanges();
                 return Redirect("/");

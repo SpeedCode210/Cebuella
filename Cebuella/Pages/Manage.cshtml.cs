@@ -25,7 +25,7 @@ public class Manage : PageModel
     public string DiscordId { get; set; }
     
     private readonly AppDbContext context;
-
+    
     public Manage(AppDbContext context)
     {
         this.context = context;
@@ -139,9 +139,4 @@ public class Manage : PageModel
         };
     }
 
-    class DiscordInfo
-    {
-        public string Token { get; set; }
-        public ulong Guild { get; set; }
-    }
 }
