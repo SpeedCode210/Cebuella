@@ -4,6 +4,7 @@
 @{
     var userId = User.FindFirst(ClaimTypes.Name)?.Value;
     var fullName = await UserService.GetUserFullNameAsync(userId);
+    var role = User.FindFirst(ClaimTypes.Role)?.Value;
 }
 
 <!DOCTYPE html>
@@ -39,8 +40,26 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                     </li>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Login">Login</a>
+                        </li>
+                    }
                     @if (User.Identity.IsAuthenticated)
                     {
+                        @if(role=="Student")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Manage">Manage Users</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Profile">@fullName</a>
                         </li>
@@ -61,7 +80,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        Cebuella - Student Progress Tracker &copy; 2025 Raouf Ould Ali
+        <a href="https://github.com/SpeedCode210/Cebuella">Cebuella - Student Progress Tracker</a> &copy; 2025 Raouf Ould Ali
     </div>
 </footer>
 

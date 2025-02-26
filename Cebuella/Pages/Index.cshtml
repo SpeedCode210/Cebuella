@@ -1,116 +1,12 @@
-﻿@page
-@using System.Security.Claims
-@using Cebuella.Models
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model IndexModel
+@page
+@model Cebuella.Pages.Index
+
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="container mt-5">
-    <div class="text-center">
-        <h1 class="display-4">📝 My Daily Report</h1>
-        <h2 class="display-6">@DateTime.Today.ToString("dd MMMM yyyy")</h2>
-        @if (Model.NewReport)
-        {
-            <p>You didn't submit your daily report yet.</p>
-        }
-        <a class="btn btn-info" href="@("/History/" + Model.Username)">View History</a>
-    </div>
-
-    <div class="row justify-content-center">
-        <form method="POST" class="mt-4">
-            <div class="form-group">
-                <div id="editorContainer"
-                     style="height: 450px; border: 2px solid #007bff; border-radius: 5px;"></div>
-                <textarea id="dailyReport" name="DailyReport" style="display: none;">@Model.DailyReport</textarea>
-            </div>
-            @if (Model.NewReport)
-            {
-                <input type="hidden" asp-for="Action" value="0"/>
-            }
-            else
-            {
-                <input type="hidden" asp-for="Action" value="1"/>
-            }
-            <button type="submit" class="btn btn-primary mt-3">Save</button>
-        </form>
-
-    </div>
+<div class="home-div">
+    <img src="cebuella.png"/>
+    <p>Cebuella - Student Progress Tracker</p>
+    <p>@Model.InstanceName</p>
 </div>
-
-<div class="container mt-5">
-    <div class="text-center">
-        <h2 class="display-4">📚 My Tasks</h2>
-    </div>
-
-    <!-- Task List -->
-    <div class="list-group mt-4">
-        @foreach (StudentTask t in Model.Tasks)
-        {
-            <div
-                class="list-group-item mb-3 shadow-sm @(t.Content.ToLower().Contains("important") ? "bg-warning" : "")">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="h5">👨‍🏫&nbsp;Given by @t.CoachId</small>
-                        <br/>
-                        <span class="text-md text-break">📝 @t.Content</span>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <form method="post" class="me-2" style="width: max-content">
-                            <input type="hidden" asp-for="Action" value="2"/>
-                            <input type="hidden" asp-for="TaskId" value="@t.Id"/>
-                            <select asp-for="TaskStatus" class="form-select form-select-sm"
-                                    onchange="this.form.submit()">
-                                <option value="@Status.NotAttempted" selected="@(t.Status == Status.NotAttempted)">🟡 Not
-                                    Attempted
-                                </option>
-                                <option value="@Status.Attempting" selected="@(t.Status == Status.Attempting)">🔵
-                                    Attempting
-                                </option>
-                                <option value="@Status.Stuck" selected="@(t.Status == Status.Stuck)">🟠 Stuck</option>
-                                <option value="@Status.Completed" selected="@(t.Status == Status.Completed)">✅
-                                    Completed
-                                </option>
-                            </select>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
-@section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function (event) {
-            var scrollpos = localStorage.getItem('scrollpos');
-            if (scrollpos) window.scrollTo(0, scrollpos);
-        });
-
-        window.onbeforeunload = function (e) {
-            localStorage.setItem('scrollpos', window.scrollY);
-        };
-    </script>
-
-    <script>
-        // Monaco Editor configuration
-        require.config({paths: {'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs'}});
-        require(['vs/editor/editor.main'], function () {
-            // Initialize Monaco Editor
-            var editor = monaco.editor.create(document.getElementById('editorContainer'), {
-                value: document.getElementById('dailyReport').value,
-                language: 'markdown', // Change language to Markdown
-                theme: 'vs-dark', // Change theme to dark mode
-                lineNumbers: 'on', // Enable line numbers
-                minimap: {enabled: true}, // Enable minimap
-                automaticLayout: true // Auto resize
-            });
-
-            // Update the hidden textarea with the editor content before form submission
-            document.querySelector('form')?.addEventListener('submit', function () {
-                document.getElementById('dailyReport').value = editor.getValue();
-            });
-        });
-    </script>
-}
