@@ -19,6 +19,7 @@ public class LoginModel : PageModel
     public LoginModel(AppDbContext context)
     {
         this.context = context;
+        context.EnsureAdminExists();
     }
 
     [BindProperty] public required InputModel Input { get; set; }

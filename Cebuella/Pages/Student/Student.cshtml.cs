@@ -23,6 +23,14 @@ public class Student : PageModel
 
     [BindProperty] public int TaskId { get; set; }
 
+    public List<PointCategory> PointCategories { get; set; } = [];
+
+    [BindProperty]
+    public List<long> Points { get; set; } = [];
+    
+    [BindProperty]
+    public List<long> DeltaPoints { get; set; } = [];
+
     private readonly AppDbContext context;
 
     public Student(ILogger<IndexModel> logger, AppDbContext context)
@@ -50,14 +58,14 @@ public class Student : PageModel
         }
 
         Tasks = context.Tasks.Where(t => t.StudentId == StudentUsername).ToList();
-        
+
         Tasks.Sort((a, b) =>
         {
             if (a.Content.ToLower().Contains("important"))
             {
                 return -1;
             }
-            
+
             if (b.Content.ToLower().Contains("important"))
             {
                 return 1;
@@ -66,26 +74,37 @@ public class Student : PageModel
             return 0;
         });
 
+        PointCategories = context.PointCategories.ToList();
+
+        Points = context.Users.First(u => u.Username == StudentUsername).Points.ToList();
+
+        while (Points.Count < PointCategories.Count) Points.Add(0);
+        
+        DeltaPoints = new List<long>();
+        for(int i = 0; i < PointCategories.Count; i++) DeltaPoints.Add(0);
+
         return Page();
     }
 
     public IActionResult OnPost()
     {
-        var user = HttpContext.User;
-        var username = user.FindFirst(ClaimTypes.Role)?.Value;
+        var username = HttpContext.User;
+        var role = username.FindFirst(ClaimTypes.Role)?.Value;
 
-        if (username == "Student") return Redirect("/");
-
+        if (role == "Student") return Redirect("/");
+        
+        var usr = context.Users.FirstOrDefault(u => u.Username == StudentUsername)!;
+        
         switch (Action)
         {
             case 0:
-                string c = user.FindFirst(ClaimTypes.Name)?.Value;
+                string? c = username.FindFirst(ClaimTypes.Name)?.Value;
                 context.Tasks.Add(new()
                 {
                     StudentId = StudentUsername,
                     Content = TaskContent,
                     Status = Status.NotAttempted,
-                    CoachId = c
+                    CoachId = c!
                 });
                 context.SaveChanges();
                 var h = context.Users.FirstOrDefault(u => u.Username == StudentUsername)!.DiscordChannel;
@@ -98,6 +117,19 @@ public class Student : PageModel
                 break;
             case 1:
                 context.Tasks.Remove(new() { Id = TaskId });
+                context.SaveChanges();
+                break;
+            case 2:
+                usr.Points = Points.ToArray();
+                context.Users.Update(usr);
+                context.SaveChanges();
+                break;
+            case 3:
+                Points = usr.Points.ToList();
+                while (Points.Count < DeltaPoints.Count) Points.Add(0);
+                usr.Points = Points.ToArray();
+                for(int i = 0; i < Points.Count; i++) usr.Points[i] += DeltaPoints[i];
+                context.Users.Update(usr);
                 context.SaveChanges();
                 break;
         }

@@ -26,15 +26,15 @@ public class IndexModel : PageModel
     public int TaskId { get; set; }
 
 
-    private readonly AppDbContext context;
+    private readonly AppDbContext _context;
     
-    private readonly IConfiguration configuration;
+    private readonly IConfiguration _configuration;
 
     public IndexModel(ILogger<IndexModel> logger, AppDbContext context, IConfiguration configuration)
     {
         _logger = logger;
-        this.context = context;
-        this.configuration = configuration;
+        this._context = context;
+        this._configuration = configuration;
     }
 
     public IActionResult OnGet()
@@ -48,7 +48,7 @@ public class IndexModel : PageModel
         if(role != "Student") return Redirect("/Manage");
 
 
-        var report = context.Reports.FirstOrDefault(t => t.Username == username && t.Date == DateTime.Now.Date);
+        var report = _context.Reports.FirstOrDefault(t => t.Username == username && t.Date == DateTime.Now.Date);
         if (report == null)
         {
             NewReport = true;
@@ -59,7 +59,7 @@ public class IndexModel : PageModel
             DailyReport = report.Content;
         }
         
-        Tasks = context.Tasks.Where(t=>t.StudentId == username).ToList();
+        Tasks = _context.Tasks.Where(t=>t.StudentId == username).ToList();
         Tasks.Sort((a, b) =>
         {
             if (a.Content.ToLower().Contains("important"))
@@ -84,32 +84,32 @@ public class IndexModel : PageModel
         switch (Action)
         {
             case 0:
-                context.Reports.Add(new()
+                _context.Reports.Add(new()
                 {
                     Date = DateTime.Now.Date,
                     Username = username,
                     Content = DailyReport
                 });
-                context.SaveChanges();
+                _context.SaveChanges();
 
-                if (!string.IsNullOrEmpty(configuration["PostReportCommand"]))
+                if (!string.IsNullOrEmpty(_configuration["PostReportCommand"]))
                 {
-                    ShellHelper.Bash(configuration["PostReportCommand"]!.Replace("{STUDENT_USERNAME}", username));
+                    ShellHelper.Bash(_configuration["PostReportCommand"]!.Replace("{STUDENT_USERNAME}", username));
                 }
                 break;
             case 1:
                 var user = HttpContext.User;
                 var report =
-                    context.Reports.FirstOrDefault(t => t.Username == username && t.Date == DateTime.Now.Date);
+                    _context.Reports.FirstOrDefault(t => t.Username == username && t.Date == DateTime.Now.Date);
                 report!.Content = DailyReport;
-                context.Reports.Update(report);
-                context.SaveChanges();
+                _context.Reports.Update(report);
+                _context.SaveChanges();
                 break;
             case 2:
-                var task = context.Tasks.FirstOrDefault(t => t.Id == TaskId);
+                var task = _context.Tasks.FirstOrDefault(t => t.Id == TaskId);
                 task!.Status = TaskStatus;
-                context.Tasks.Update(task);
-                context.SaveChanges();
+                _context.Tasks.Update(task);
+                _context.SaveChanges();
                 return Redirect("/");
                 break;
         }

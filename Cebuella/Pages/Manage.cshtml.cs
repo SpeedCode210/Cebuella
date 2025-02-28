@@ -22,7 +22,7 @@ public class Manage : PageModel
     public string Username { get; set; }
     
     [BindProperty]
-    public string DiscordId { get; set; }
+    public string? DiscordId { get; set; }
     
     private readonly AppDbContext context;
     
@@ -41,7 +41,8 @@ public class Manage : PageModel
         Users = context.Users.ToList();
         Users.Sort((a, b) =>
         {
-            return a.Type - b.Type;
+            if(a.Type - b.Type != 0) return a.Type - b.Type;
+            return a.Weight - b.Weight;
         });
         int[] unsolvedtasks = new int[Users.Count];
         bool[] submittedReport = new bool[Users.Count];
@@ -58,6 +59,7 @@ public class Manage : PageModel
 
     public IActionResult OnPost()
     {
+        User? usr;
         switch (Action)
         {
             case 0:
@@ -75,14 +77,14 @@ public class Manage : PageModel
                 context.Users.Remove(new User() { Username = Username });
                 break;
             case 2:
-                var usr = context.Users.FirstOrDefault(u => u.Username == Username);
+                usr = context.Users.FirstOrDefault(u => u.Username == Username);
                 usr!.Type = UserType.Coach;
                 context.Users.Update(usr!);
                 break;
-            case 3:
-                var usr2 = context.Users.FirstOrDefault(u => u.Username == Username);
-                usr2!.DiscordChannel = DiscordId;
-                context.Users.Update(usr2!);
+            case 3: 
+                usr = context.Users.FirstOrDefault(u => u.Username == Username);
+                usr!.DiscordChannel = DiscordId ?? "";
+                context.Users.Update(usr!);
                 context.SaveChanges();
                 return RedirectToPage("/Manage");
                 break;
@@ -94,6 +96,21 @@ public class Manage : PageModel
                     if(!context.Reports.Any(r => r.Username == user.Username && r.Date == DateTime.Now.Date) && user.DiscordChannel != "") peopleIds.Add(user.DiscordChannel);
                 }
                 RemindPeople(peopleIds);
+                break;
+            case 5:
+                usr = context.Users.FirstOrDefault(u => u.Username == Username);
+                usr!.Type = UserType.Student;
+                context.Users.Update(usr!);
+                break;
+            case 6:
+                usr = context.Users.FirstOrDefault(u => u.Username == Username);
+                usr!.Weight -= 1;
+                context.Users.Update(usr!);
+                break;
+            case 7:
+                usr = context.Users.FirstOrDefault(u => u.Username == Username);
+                usr!.Weight += 1;
+                context.Users.Update(usr!);
                 break;
         }
         context.SaveChanges();

@@ -1,0 +1,60 @@
+@page
+@using System.Security.Claims
+@using Cebuella.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model Cebuella.Pages.Settings
+@{
+    ViewData["Title"] = "Settings";
+    var role = User.FindFirst(ClaimTypes.Role)?.Value;
+}
+
+<div class="container mt-4">
+    <h2>Point Categories</h2>
+
+    <!-- Add User Form -->
+    <form method="POST" class="mb-4">
+        <div class="input-group">
+            <input asp-for="Category" required class="form-control" placeholder="Enter category name"/>
+            <input asp-for="Action" value="0" type="hidden"/>
+            <button type="submit" asp-for="Action" value="0" class="btn btn-primary">Add</button>
+        </div>
+        <div class="form-text text-muted" style="text-align: end">
+            Once added, a category cannot be removed, be aware !
+        </div>
+    </form>
+
+    <form method="POST" id="reminder">
+        <input asp-for="Action" value="4" type="hidden"/>
+    </form>
+
+    <!-- Users Table -->
+    <div class="table-responsive">
+        <table class="table" style="min-width: max-content;">
+            <thead class="thead-dark">
+            <tr>
+                <th>Category</th>
+                <th>Rename</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for (int i = 0; i < Model.PointCategories.Count; i++)
+            {
+                var pc = Model.PointCategories[i];
+                <tr>
+                    <td>@pc.Name</td>
+                    <td>
+                            <form method="POST">
+                                <div class="input-group">
+                                    <input asp-for="Category" value="@pc.Name" type="hidden"/>
+                                    <input asp-for="NewCategory" required value="" class="form-control"/>
+                                    <input asp-for="Action" value="1" type="hidden"/>
+                                    <button type="submit" class="btn btn-info btn-sm">Rename</button>
+                                </div>
+                            </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

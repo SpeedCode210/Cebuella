@@ -1,0 +1,44 @@
+@page
+@model Cebuella.Pages.Ranking
+
+@{
+    ViewData["Title"] = "Ranking";
+}
+
+<div class="table-responsive">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Student</th>
+            @foreach (var pc in Model.PointCategories)
+            {
+                <th style="width: min-content">@pc.Name</th>
+            }
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            int rank = 1;
+        }
+        @for (int i = 0; i < Model.Users.Count; i++)
+        {
+            var u = Model.Users[i];
+            <tr>
+                <th>@(i == 0 || Model.Users[i].GetPoints() == Model.Users[i-1].GetPoints() ? rank : ++rank)</th>
+                <th>@u.FirstName @u.LastName</th>
+                @for (int j = 0; j < Model.PointCategories.Count; j++)
+                {
+                    <td style="min-width: 100px">
+                        @(u.Points.Length > j ? u.Points[j] : 0)
+                    </td>
+                }
+                <td>
+                    @u.GetPoints()
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

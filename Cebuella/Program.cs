@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Cebuella;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -50,4 +51,28 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    try
+    {
+        if (dbContext.Database.GetPendingMigrations().Any())
+        {
+            Console.WriteLine("Applying pending migrations...");
+            dbContext.Database.Migrate();
+            Console.WriteLine("Migrations applied.");
+        }
+        else
+        {
+            Console.WriteLine("Database is up to date.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error applying migrations: {ex.Message}");
+    }
+
+}
+
 app.Run();
+

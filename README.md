@@ -5,3 +5,8 @@
 <p align="center">
 A simple web platform for coordination between students and coaches.
 </p>
+---
+## Main features
+- Student daily report.
+- Task distribution from coaches to students.
+- Ranking of the students with custom point categories.

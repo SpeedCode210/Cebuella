@@ -1,12 +1,15 @@
 @page
+@using System.Security.Claims
 @using Cebuella.Models
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model Cebuella.Pages.Manage
 @{
     ViewData["Title"] = "Manage Users";
+    var role = User.FindFirst(ClaimTypes.Role)?.Value;
 }
 
 <div class="container mt-4">
-    <h2>Manage Users</h2>
+    <h2>Manage Users @if(role == "Admin"){<span>(Admin)</span>}</h2>
 
     <!-- Add User Form -->
     <form method="POST" class="mb-4">
@@ -37,6 +40,7 @@
                 <th>Unsolved Tasks</th>
                 <th>Channel ID</th>
                 <th>Actions</th>
+                <th>Order</th>
             </tr>
             </thead>
             <tbody>
@@ -60,7 +64,7 @@
                             <form method="POST">
                                 <div class="input-group">
                                     <input asp-for="Username" value="@u.Username" type="hidden"/>
-                                    <input asp-for="DiscordId" required value="@u.DiscordChannel" class="form-control"/>
+                                    <input asp-for="DiscordId" value="@u.DiscordChannel" class="form-control"/>
                                     <input asp-for="Action" value="3" type="hidden"/>
                                     <button type="submit" class="btn btn-info btn-sm">Change</button>
                                 </div>
@@ -73,14 +77,36 @@
                             <form method="POST" class="d-inline">
                                 <input asp-for="Username" value="@u.Username" type="hidden"/>
                                 <input asp-for="Action" value="2" type="hidden"/>
-                                <button type="submit" class="btn btn-warning btn-sm">Make Coach</button>
+                                <button type="submit" class="btn btn-warning btn-sm">&nbsp;&nbsp;&nbsp;Make&nbsp;Coach&nbsp;&nbsp;&nbsp;</button>
                             </form>
+                        }else if (u.Type == UserType.Coach && role == "Admin")
+                        {
+                            <form method="POST" class="d-inline">
+                                <input asp-for="Username" value="@u.Username" type="hidden"/>
+                                <input asp-for="Action" value="5" type="hidden"/>
+                                <button type="submit" class="btn btn-primary btn-sm">Make&nbsp;Student</button>
+                            </form>
+                        }
+                        @if ((u.Type == UserType.Student || u.Type == UserType.Coach) && role == "Admin")
+                        {
                             <form method="POST" class="d-inline">
                                 <input asp-for="Username" value="@u.Username" type="hidden"/>
                                 <input asp-for="Action" value="1" type="hidden"/>
                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                             </form>
                         }
+                    </td>
+                    <td>
+                        <form method="POST" class="d-inline">
+                            <input asp-for="Username" value="@u.Username" type="hidden"/>
+                            <input asp-for="Action" value="6" type="hidden"/>
+                            <button type="submit" class="btn btn-success btn-sm"><i class="fa-solid fa-arrow-up"></i></button>
+                        </form>
+                        <form method="POST" class="d-inline">
+                            <input asp-for="Username" value="@u.Username" type="hidden"/>
+                            <input asp-for="Action" value="7" type="hidden"/>
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-arrow-down"></i></button>
+                        </form>
                     </td>
                 </tr>
             }

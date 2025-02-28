@@ -27,6 +27,86 @@
     </div>
 </div>
 
+<div class="container mt-5">
+    <div class="text-center">
+        <h2 class="display-4">Update Student Points</h2>
+    </div>
+
+    <form method="post" class="mb-4">
+        <div class="input-group">
+            <input type="hidden" value="2" asp-for="Action"/>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    @foreach (var pc in Model.PointCategories)
+                    {
+                        <th style="width: min-content">@pc.Name</th>
+                    }
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    @for (int i = 0; i < Model.PointCategories.Count; i++)
+                    {
+                        <td style="min-width: 100px">
+                            <input type="number" class="form-control" value="@Model.Points[i]" asp-for="@Model.Points[i]" required/>
+                        </td>
+                    }
+                    <td>            
+                        <button type="submit" class="btn btn-warning">Update</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+</div>
+
+<div class="container mt-5">
+    <div class="text-center">
+        <h2 class="display-4">Add to Student Points</h2>
+    </div>
+
+    <form method="post" class="mb-4">
+        <div class="input-group">
+            <input type="hidden" value="3" asp-for="Action"/>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    @foreach (var pc in Model.PointCategories)
+                    {
+                        <th style="width: min-content">@pc.Name</th>
+                    }
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    @for (int i = 0; i < Model.PointCategories.Count; i++)
+                    {
+                        <td style="min-width: 100px">
+                            <input type="number" class="form-control" value="@Model.DeltaPoints[i]" asp-for="@Model.DeltaPoints[i]" required/>
+                        </td>
+                    }
+                    <td>
+                        <button type="submit" class="btn btn-success">Add</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </form>
+
+
+</div>
+
 
 
 <div class="container mt-5">
