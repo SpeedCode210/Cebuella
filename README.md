@@ -15,7 +15,7 @@ A simple web platform for coordination between students and coaches.
 
 ---
 
-**Note : ** The default user creditentials are :
+**Note :** The default user creditentials are :
 ```
 admin
 12345678
