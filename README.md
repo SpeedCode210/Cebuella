@@ -12,3 +12,11 @@ A simple web platform for coordination between students and coaches.
 - Student daily report.
 - Task distribution from coaches to students.
 - Ranking of the students with custom point categories.
+
+---
+
+**Note : ** The default user creditentials are :
+```
+admin
+12345678
+```
