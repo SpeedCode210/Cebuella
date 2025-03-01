@@ -5,6 +5,7 @@
     var userId = User.FindFirst(ClaimTypes.Name)?.Value;
     var fullName = await UserService.GetUserFullNameAsync(userId);
     var role = User.FindFirst(ClaimTypes.Role)?.Value;
+    var theme = Context.Session.GetInt32("THEME") ?? 0;
 }
 
 <!DOCTYPE html>
@@ -15,7 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>@ViewData["Title"] - Cebuella</title>
     <link rel="icon" type="image/png" href="/cebuella.png">
-    <link rel="stylesheet" href="https://bootswatch.com/5/lumen/bootstrap.css"/>
+    <link rel="stylesheet" href="@Theming.Themes[theme].Url"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/Cebuella.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0/min/vs/editor/editor.main.min.css" />
@@ -26,7 +27,7 @@
 <body>
 
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-page="/Index"><img style="height:40px" src="/cebuella.png"/></a>
             
@@ -39,15 +40,15 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Ranking">Ranking</a>
+                        <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Ranking">Ranking</a>
                     </li>
                     @if (!User.Identity.IsAuthenticated)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Login">Login</a>
+                            <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Login">Login</a>
                         </li>
                     }
                     @if (User.Identity.IsAuthenticated)
@@ -55,24 +56,27 @@
                         @if(role=="Student")
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Dashboard">Dashboard</a>
+                                <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Dashboard">Dashboard</a>
+                            </li>
+                            
+                            <li class="nav-item">
+                                <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" href="/History/@userId">History</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Manage">Manage Users</a>
-                            </li>
-                            
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Settings">Settings</a>
+                                <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Manage">Manage Users</a>
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Profile">@fullName</a>
+                            <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Settings">Settings</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Logout">Log out</a>
+                            <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Profile">@fullName</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link  @(theme is 1 ? "text-dark" : (theme is 3 or 4 ? "text-white" : ""))" asp-area="" asp-page="/Logout">Log out</a>
                         </li>
                     }
                 </ul>
